@@ -2,6 +2,7 @@
   "functions": {
     "api/subscribe.js": { "memory": 128, "maxDuration": 10 },
     "api/feed.js": { "memory": 128, "maxDuration": 15 },
-    "api/health.js": { "memory": 128, "maxDuration": 5 }
+    "api/health.js": { "memory": 128, "maxDuration": 5 },
+    "api/widget.js": { "memory": 128, "maxDuration": 15 }
   }
 }
