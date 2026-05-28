@@ -132,15 +132,25 @@ card    = 1c2126   cor do card
 border  = 252b2f   cor da borda
 muted   = 9ea1a3   cor secundária
 title   =           título opcional
+font    =           fonte (ex: Georgia,serif)
+layout  = vertical  (padrão) ou horizontal
 
-<span class="hl">// Exemplo com iframe</span>
+<span class="hl">// Vertical (padrão) — cards empilhados</span>
 &lt;iframe src="https://obscura-api-amber.vercel.app/api/widget?bg=0d1318&amp;text=ffffff&amp;accent=f44336&amp;title=Obscura"
-  width="100%" height="520" style="border:0;border-radius:12px"&gt;&lt;/iframe&gt;</code></pre>
+  width="100%" height="520" style="border:0;border-radius:12px"&gt;&lt;/iframe&gt;
+
+<span class="hl">// Horizontal — 3 cards lado a lado, responsivo</span>
+&lt;iframe src="https://obscura-api-amber.vercel.app/api/widget?layout=horizontal&amp;bg=0d1318&amp;text=ffffff&amp;accent=f44336"
+  width="100%" height="360" style="border:0;border-radius:12px"&gt;&lt;/iframe&gt;</code></pre>
     <p class="desc">O widget já vem com CSS inline — funciona em qualquer lugar, inclusive em sites que bloqueiam JavaScript.</p>
 
-    <p class="desc" style="margin-top:16px;font-weight:600">Ao vivo:</p>
+    <p class="desc" style="margin-top:16px;font-weight:600">Widget vertical ao vivo:</p>
     <iframe src="/api/widget?bg=0d1318&text=e0e0e0&accent=f44336&card=1c2126&border=252b2f&muted=9ea1a3&title=Na+Obscura+essa+semana"
       width="100%" height="520" style="border:1px solid #252b2f;border-radius:12px;background:#0d1318"></iframe>
+
+    <p class="desc" style="margin-top:16px;font-weight:600">Widget horizontal ao vivo:</p>
+    <iframe src="/api/widget?layout=horizontal&bg=0d1318&text=e0e0e0&accent=f44336&card=1c2126&border=252b2f&muted=9ea1a3"
+      width="100%" height="380" style="border:1px solid #252b2f;border-radius:12px;background:#0d1318"></iframe>
   </div>
 
   <hr>

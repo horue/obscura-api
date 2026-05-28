@@ -47,7 +47,7 @@ export default async function handler(req, res) {
 
     if (!items.length) throw new Error('No items parsed');
 
-    var isWidget = req.query.bg || req.query.text || req.query.accent || req.query.card || req.query.border || req.query.muted || req.query.title;
+    var isWidget = req.query.bg || req.query.text || req.query.accent || req.query.card || req.query.border || req.query.muted || req.query.title || req.query.layout || req.query.font;
 
     if (isWidget) {
       var bg = req.query.bg || '#0d1318';
@@ -57,26 +57,48 @@ export default async function handler(req, res) {
       var border = req.query.border || '#252b2f';
       var muted = req.query.muted || '#9ea1a3';
       var title = req.query.title || '';
+      var font = req.query.font || 'system-ui, sans-serif';
+      var layout = req.query.layout || 'vertical';
 
-      var cardsHtml = items.map(function(item) {
-        return '<a href="' + item.link + '" target="_blank" style="display:block;text-decoration:none;background:' + card + ';border:1px solid ' + border + ';border-radius:12px;overflow:hidden;transition:transform 0.2s;margin-bottom:16px">' +
-          (item.img ? '<img src="' + item.img + '" style="width:100%;height:180px;object-fit:cover;display:block;border-bottom:1px solid ' + border + '" onerror="this.style.display=\'none\'">' : '') +
-          '<div style="padding:20px">' +
-          '<div style="font-size:0.75rem;font-weight:600;color:' + accent + ';text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">' + item.tag + '</div>' +
-          '<div style="font-size:1.05rem;font-weight:700;color:' + text + ';line-height:1.35;margin-bottom:8px">' + item.title + '</div>' +
-          (item.desc ? '<div style="font-size:0.88rem;color:' + muted + ';line-height:1.6;margin-bottom:8px">' + item.desc + '…</div>' : '') +
-          '<div style="font-size:0.8rem;color:' + accent + ';font-weight:600">' + item.meta + '</div>' +
+      function makeCard(item) {
+        return '<a href="' + item.link + '" target="_blank" class="obsw-card">' +
+          (item.img ? '<img src="' + item.img + '" class="obsw-img" onerror="this.style.display=\'none\'">' : '') +
+          '<div class="obsw-body">' +
+          '<div class="obsw-tag">' + item.tag + '</div>' +
+          '<div class="obsw-title">' + item.title + '</div>' +
+          (item.desc ? '<div class="obsw-desc">' + item.desc + '…</div>' : '') +
+          '<div class="obsw-meta">' + item.meta + '</div>' +
           '</div></a>';
-      }).join('');
+      }
 
-      var html = '<div style="font-family:system-ui,sans-serif;background:' + bg + ';padding:20px;border-radius:12px;max-width:600px;margin:0 auto">' +
-        (title ? '<h2 style="color:' + text + ';font-size:1.3rem;margin:0 0 20px;text-align:center">' + title + '</h2>' : '') +
-        cardsHtml +
-        '<p style="text-align:center;font-size:0.75rem;color:' + muted + ';margin:12px 0 0"><a href="https://www.aobscura.com.br" target="_blank" style="color:' + accent + '">Obscura</a> — a maior newsletter de fotografia do Brasil</p>' +
-        '</div>';
+      var cardsHtml = items.map(makeCard).join('');
+
+      var style = '.obsw-card{display:block;text-decoration:none;background:' + card + ';border:1px solid ' + border + ';border-radius:12px;overflow:hidden;transition:transform .2s}';
+      style += '.obsw-img{width:100%;height:160px;object-fit:cover;display:block;border-bottom:1px solid ' + border + '}';
+      style += '.obsw-body{padding:16px;display:flex;flex-direction:column;flex:1}';
+      style += '.obsw-tag{font-size:.7rem;font-weight:600;color:' + accent + ';text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}';
+      style += '.obsw-title{font-size:.95rem;font-weight:700;color:' + text + ';line-height:1.35;margin-bottom:6px}';
+      style += '.obsw-desc{font-size:.82rem;color:' + muted + ';line-height:1.5;margin-bottom:6px;flex:1}';
+      style += '.obsw-meta{font-size:.75rem;color:' + accent + ';font-weight:600}';
+
+      var container = '<div class="obsw-wrap" style="font-family:' + font + ';background:' + bg + ';padding:20px;border-radius:12px;margin:0 auto;max-width:' + (layout === 'horizontal' ? '800' : '600') + 'px">';
+      container += '<meta name="viewport" content="width=device-width,initial-scale=1">';
+      container += title ? '<h2 style="color:' + text + ';font-size:1.2rem;margin:0 0 16px;text-align:center">' + title + '</h2>' : '';
+      container += '<style>';
+
+      if (layout === 'horizontal') {
+        container += '.obsw-row{display:flex;gap:16px;flex-wrap:wrap}.obsw-row>.obsw-card{flex:1;min-width:200px;max-width:100%}';
+        container += '@media(max-width:640px){.obsw-row{flex-direction:column}.obsw-row>.obsw-card{min-width:100%}}';
+        container += '</style><div class="obsw-row">' + cardsHtml + '</div>';
+      } else {
+        container += '.obsw-card{margin-bottom:16px}</style>';
+        container += cardsHtml;
+      }
+
+      container += '<p style="text-align:center;font-size:.7rem;color:' + muted + ';margin:12px 0 0"><a href="https://www.aobscura.com.br" target="_blank" style="color:' + accent + '">Obscura</a> — a maior newsletter de fotografia do Brasil</p></div>';
 
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.status(200).send(html);
+      res.status(200).send(container);
       return;
     }
 

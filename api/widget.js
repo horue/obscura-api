@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   var query = '';
-  var params = ['bg','text','accent','card','border','muted','title'];
+  var params = ['bg','text','accent','card','border','muted','title','layout','font'];
   for (var i = 0; i < params.length; i++) {
     if (req.query[params[i]]) {
       query += (query ? '&' : '') + params[i] + '=' + encodeURIComponent(req.query[params[i]]);
