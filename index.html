@@ -5,31 +5,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Obscura API</title>
 <style>
-  body { font-family: system-ui, sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; background: #0d1318; color: #e0e0e0; line-height: 1.6; }
-  h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  body { font-family: system-ui, sans-serif; max-width: 680px; margin: 60px auto; padding: 0 24px; background: #0d1318; color: #e0e0e0; line-height: 1.6; }
+  h1 { font-size: 1.8rem; margin-bottom: 2px; }
   h2 { font-size: 1.1rem; color: #f44336; font-weight: 400; margin-top: 0; }
-  .endpoint { background: #1c2126; border: 1px solid #252b2f; border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
-  .endpoint code { background: #2e3337; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
-  .tag { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 2px 10px; border-radius: 4px; margin-right: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .endpoint { background: #1c2126; border: 1px solid #252b2f; border-radius: 8px; padding: 20px 24px; margin: 20px 0; }
+  .endpoint code, .inline-code { background: #2e3337; padding: 2px 8px; border-radius: 4px; font-size: 0.88rem; }
+  .endpoint pre { background: #0d1318; border: 1px solid #252b2f; border-radius: 6px; padding: 12px 16px; overflow-x: auto; font-size: 0.82rem; line-height: 1.5; margin: 10px 0 4px; }
+  .tag { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 2px 10px; border-radius: 4px; margin-right: 8px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+  .tag-get { background: #1a3a4a; color: #60cfff; }
   .tag-post { background: #1a4731; color: #4ade80; }
+  .endpoint-title { font-size: 1rem; }
+  .endpoint p { margin: 8px 0 0; }
+  .endpoint .desc { color: #9ea1a3; font-size: 0.85rem; }
   hr { border: none; border-top: 1px solid #252b2f; margin: 40px 0; }
   a { color: #f44336; }
+  .footer-links { font-size: 0.8rem; color: #515659; }
 </style>
 </head>
 <body>
   <h1>Obscura API</h1>
-  <h2>Endpoints para integração com a newsletter Obscura</h2>
+  <h2>Micro-API para integrar a newsletter Obscura em qualquer frontend</h2>
 
   <div class="endpoint">
-    <strong><span class="tag tag-post">POST</span> <code>/api/subscribe</code></strong>
-    <p style="margin: 8px 0 0">Inscreve um email na newsletter Obscura (Substack).</p>
-    <p style="margin: 4px 0 0; font-size: 0.85rem; color: #9ea1a3;">
-      <strong>Body:</strong> <code>{"email": "usuario@email.com"}</code><br>
-      <strong>Resposta:</strong> <code>{"ok": true}</code>
-    </p>
+    <strong class="endpoint-title"><span class="tag tag-get">GET</span> <code>/api/health</code></strong>
+    <p class="desc">Verifica se a API está funcionando.</p>
+    <pre><code>// Resposta
+{ "status": "ok", "timestamp": "2026-05-28T00:00:00.000Z" }</code></pre>
+  </div>
+
+  <div class="endpoint">
+    <strong class="endpoint-title"><span class="tag tag-post">POST</span> <code>/api/subscribe</code></strong>
+    <p class="desc">Inscreve um email na newsletter Obscura (Substack).</p>
+    <pre><code>// Request (JSON)
+{ "email": "usuario@email.com" }
+
+// Resposta (sucesso)
+{ "ok": true, "status": 200 }
+
+// Resposta (erro)
+{ "error": "Email inválido" }</code></pre>
+    <p class="desc"><strong>Body:</strong> <code>{"email": "usuario@email.com"}</code></p>
+  </div>
+
+  <div class="endpoint">
+    <strong class="endpoint-title"><span class="tag tag-get">GET</span> <code>/api/feed</code></strong>
+    <p class="desc">Retorna os 3 posts mais recentes da Obscura (substituto do rss2json, sem CORS).</p>
+    <pre><code>// Resposta
+{
+  "ok": true,
+  "items": [
+    {
+      "link": "https://www.aobscura.com.br/p/titulo",
+      "title": "Título do Post",
+      "desc": "Descrição...",
+      "img": "https://...",
+      "tag": "Categoria",
+      "meta": "Mai 2026 · Leia na Obscura →"
+    }
+  ]
+}</code></pre>
+    <p class="desc">Respeita o header <code>Cache-Control: public, max-age=1800</code> (30 min).</p>
   </div>
 
   <hr>
-  <p style="font-size: 0.8rem; color: #515659"><a href="https://www.aobscura.com.br">Obscura</a> · <a href="https://github.com/renatorochamiranda/obscura-api">GitHub</a></p>
+  <p class="footer-links"><a href="https://www.aobscura.com.br">Obscura</a> · <a href="https://github.com/renatorochamiranda/obscura-api">GitHub</a></p>
 </body>
 </html>
