@@ -25,10 +25,11 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString(),
+      redirect: 'manual',
     });
 
-    const text = await response.text();
-    res.status(response.ok ? 200 : 502).json({ ok: response.ok, status: response.status, body: text.slice(0,500) });
+    const success = response.ok || (response.status >= 300 && response.status < 400);
+    res.json({ ok: success, status: response.status });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
