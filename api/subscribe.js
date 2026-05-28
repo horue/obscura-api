@@ -27,7 +27,8 @@ export default async function handler(req, res) {
       body: params.toString(),
     });
 
-    res.status(response.ok ? 200 : 502).json({ ok: response.ok });
+    const text = await response.text();
+    res.status(response.ok ? 200 : 502).json({ ok: response.ok, status: response.status, body: text.slice(0,500) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
