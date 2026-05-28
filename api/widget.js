@@ -8,7 +8,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    var response = await fetch('https://obscura-api-amber.vercel.app/api/feed' + (query ? '?' + query : ''));
+    var origin = 'https://' + req.headers.host;
+    var response = await fetch(origin + '/api/feed' + (query ? '?' + query : ''));
     var html = await response.text();
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Access-Control-Allow-Origin', '*');
